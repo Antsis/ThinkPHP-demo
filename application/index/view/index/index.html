@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh_cn">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="__CSS__/font-awesome.min.css">
+    <link rel="stylesheet" href="__CSS__/style.css">
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.4.1/css/bootstrap.css" rel="stylesheet">
+    <title>thinkphp-dome</title>
+</head>
+
+<body>
+    <!-- nav -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Dome</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto p">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">主页 <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">联系我们</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="">关于</a>
+                </li>
+            </ul>
+            <div class="">
+                <button class="btn btn-outline-success btn-block my-2 my-sm-0" type="submit" data-toggle="modal" data-target="#modal">登录</button>
+            </div>
+        </div>
+    </nav>
+
+    
+  <!-- loging & register  -->
+  <!-- login&reg1 -->
+  <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <!-- <div class="modal-header">
+        </div> -->
+        <div class="modal-body">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" id="login-tab" data-toggle="tab" href="#login-page" role="tab" aria-controls="login-page" aria-selected="true">登录</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="reg-tab" data-toggle="tab" href="#reg-page1" role="tab" aria-controls="reg-page1" aria-selected="false">注册</a>
+                </li>
+                <li class="nav-item ml-auto">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span class="p-2" aria-hidden="true">&times;</span>
+                    </button>
+                </li>
+              </ul>
+              <!-- login -->
+              <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active mt-2" id="login-page" role="tabpanel" aria-labelledby="login-tab">
+                    
+                    <form class="container-lg">
+                        <div class="form-group">
+                            <label for="login-phone">手机</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">+86</div>
+                                </div>
+                                <input type="text" class="form-control" id="login-phone" placeholder="请输入11位手机号" maxlength="11"/>
+                                <div class="invalid-feedback">手机号格式错误</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">密码</label>
+                            <input type="password" class="form-control" id="login-password" placeholder="请输入密码"/>
+                            <div class="invalid-feedback">密码错误</div>
+                            <small class="my-2 form-text text-muted">还没注册?<a href="#reg" onclick="document.getElementById('reg-tab').click()">点击注册</a></small>
+                        </div>
+                        <button id="login" type="submit" class="btn btn-primary btn-block mb-2">登录</button>
+                        <button id="login-reset" type="reset" class="invisible position-absolute" aria-hidden="true"></button>
+                    </form>
+                </div>
+                <!-- reg1 -->
+                <div class="tab-pane fade mt-2" id="reg-page1" role="tabpanel" aria-labelledby="reg-tab">
+                    <form class="container-lg">
+                        <div class="form-group">
+                            <label for="reg-phone">手机</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">+86</div>
+                                </div>
+                                <input type="text" class="form-control" id="reg-phone" placeholder="请输入11位手机号" maxlength="11"/>
+                                <div class="invalid-feedback">请输入正确的手机号码</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="code">验证码</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="code" placeholder="请输入验证码" maxlength="4"/>
+                                
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="refresh">
+                                        <i class="fa fa-refresh" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><img id="code-img" src="{:url('__URL__/verify')}" alt="captcha" onclick="this.setAttribute('src', '{:url(\'__URL__/verify\')}?id=\'+Math.random()');"></span>
+                                </div>
+                                <div class="invalid-feedback">请输入正确的验证码</div>
+                            </div>
+                        </div>
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" id="reg-license">
+                            <label class="form-check-label" for="reg-license">同意注册协议</label>
+                            <div class="invalid-feedback">你必须同意注册协议</div>
+                        </div>
+                        <button id="reg-submit" type="submit" class="btn btn-primary btn-block mb-2" data-toggle="modal" data-target="#staticBackdrop" data-dismiss="modal">注册</button>
+                        <button id="reg-reset" type="reset" class="invisible position-absolute" aria-hidden="true"></button>
+                    </form>
+                </div>
+            
+            </div>
+        </div>
+        <!-- <div class="modal-footer">
+        </div> -->
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- reg-page2 -->
+  <div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body ">
+            <h4 class="text-center">填写短信验证码和密码完成注册</h4>
+            <p class="text-center">短信验证码已发送至 +86 <span id="phonenum"></span></p>
+            
+            <form class="container-lg">
+                <div class="form-group">
+                    <label for="sms-code">短信验证码</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="sms-code" placeholder="请输入6位短信验证码" maxlength="6"/>
+                        <div class="input-group-prepend">
+                            <button class="input-group-text" id="resend" type="button">重新发送验证码</button>
+                        </div>
+                        <div class="invalid-feedback">请输入正确的验证码</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">密码</label>
+                    <input type="password" class="form-control" id="reg-password" placeholder="请输入8-20位字母/数字/符号,至少包含两种的密码"/>
+                    <div class="invalid-feedback">密码强度不符合要求</div>
+                </div>
+                <button id="reg-submit2" type="submit" class="btn btn-primary btn-block mb-2 mt-4" data-dismiss="modal">完成</button>
+                <button id="reg2-reset" type="reset" class="invisible position-absolute" aria-hidden="true"></button>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- mainText -->
+  <div class="container">
+    <div class="jumbotron mt-4">
+        <h1 class="display-4">Hello, world!</h1>
+        <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+        <hr class="my-4">
+        <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+        <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+        <p>TODO</p>
+        <ul>
+            <li>轻量级弹出框(提示框)</li>
+            <li>注册登录后的内容, 个人页面</li>
+            <li>登录框, 登录成功后才关闭</li>
+        </ul>
+        <img src="https://i.loli.net/2020/04/09/wuZVKqejoP7DBUt.png" style="width:100px">
+        
+    </div>
+</div>
+
+
+
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.4.1/js/bootstrap.js"></script>
+    <script src="__JS__/main.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            // var lphoneFlag=0;
+            // $("#login-phone").change(function(){
+            //     if(/^1[3-9]\d{9}$/.test($(this).val())){
+            //         lphoneFlag = 1;
+            //         $(this).addClass("is-valid").removeClass("is-invalid");
+            //     }else {
+            //         lphoneFlag=0;
+            //         $(this).addClass("is-invalid").removeClass("is-valid");
+            //     }
+            // })
+            // $("#login-password").focus(function(){
+            //     $(this).removeClass("is-invalid");
+            // })
+            // $("#login").click(function(){
+            //     if(lphoneFlag){
+            //         $("#login-phone").addClass("is-valid").removeClass("is-invalid");
+            //     }else{
+            //         $("#login-phone").addClass("is-invalid").removeClass("is-valid");
+            //         return false;
+            //     }
+            //     $.ajax({
+            //         type: "POST",
+            //         url: "index/index/login",
+            //         data: {
+            //             "phone" : $("#login-phone").val(),
+            //             "password" : $("#login-password").val()
+            //         },
+            //         success: data=>{
+            //             if(data=="success"){
+            //                 alert("登录成功");
+            //                 $("#login-password").removeClass("is-invalid");
+            //                 $("#login-reset").click();
+            //             }else{
+            //                 alert("登录失败");
+            //                 $("#login-password").addClass("is-invalid");
+            //             }
+            //         },
+            //         error: ()=>{
+            //             alert("服务器错误")
+            //         }
+            //     })
+            //     return false;
+            // })
+        })
+    </script>
+
+</body>
+
+</html>

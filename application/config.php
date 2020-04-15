@@ -15,7 +15,7 @@ return [
     // +----------------------------------------------------------------------
 
     // 应用调试模式
-    'app_debug'              => false,
+    'app_debug'              => true,
     // 应用Trace
     'app_trace'              => false,
     // 应用模式状态
@@ -195,7 +195,7 @@ return [
         // 缓存前缀
         'prefix' => '',
         // 缓存有效期 0表示永久缓存
-        'expire' => 0,
+        'expire' => 12,
     ],
 
     // +----------------------------------------------------------------------
@@ -239,5 +239,23 @@ return [
         'type'      => 'bootstrap',
         'var_page'  => 'page',
         'list_rows' => 15,
+    ],
+
+    'captcha'  => [
+        // 验证码字符集合
+        // 'codeSet'  => '2345678abcdefhijkmnpqrstuvwxyzABCDEFGHJKLMNPQRTUVWXY',
+        // 验证码字体大小(px)
+        'fontSize' => 20,
+        // 是否画混淆曲线
+        // 验证码图片高度
+        'imageH'   => 24,
+        // 验证码图片宽度
+        'imageW'   => 130,
+        // 验证码位数
+        'length'   => 4,
+        // 验证成功后是否重置
+        'reset'    => false,
+
+        'bg'        => [233,236,239]
     ],
 ];

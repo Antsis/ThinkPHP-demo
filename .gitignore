@@ -3,3 +3,4 @@ composer.lock
 *.log
 thinkphp
 node_modules
+package-lock.json

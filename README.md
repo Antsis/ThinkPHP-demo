@@ -1,4 +1,4 @@
 ThinkPHP 5.0
 ===============
 
-学习ThinkPHP框架的一个实践, 嘻嘻
+It's an assignment of Thinkphp, made up of a team of 5 people. And divide the work to write the code.  

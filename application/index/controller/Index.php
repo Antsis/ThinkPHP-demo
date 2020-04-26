@@ -1,12 +1,10 @@
 <?php
 namespace app\index\controller;
 
-use AlibabaCloud\Client\Request\Traits\RetryTrait;
 use app\index\controller\SendSms;
 use app\index\controller\Captcha;
 use think\Session;
 use app\index\model\Web;
-use app\index\model\Game;
 use Exception;
 use think\Controller;
 
@@ -150,9 +148,8 @@ class Index extends Controller
         }else return "error4";
     }
 
-    public function test1()
+    public function test()
     {
 
-        
     }
 }

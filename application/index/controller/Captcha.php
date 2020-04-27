@@ -2,6 +2,7 @@
 
 namespace app\index\controller;
 
+use Exception;
 use think\Session;
 
 class Captcha
@@ -13,7 +14,7 @@ class Captcha
         'fontSize'  => 22,
         'fontAngle' => [-10, 10],
         'bgColors'  =>  [233,236,239],
-        'ttfPath'   => 'C:\Users\wcz\Documents\GitHub\thinkphp-dome\public\static\fonts\1.ttf'
+        'ttfPath'   => __DIR__ . '/assets/ttfs/1.ttf'
     ];
 
     public function __construct($config = [])
@@ -42,7 +43,7 @@ class Captcha
     public function captcha()
     {
         header('content-type:image/png');
-        
+        try{
         $image = imagecreatetruecolor($this->imageW, $this->imageH);
         $bgColor = imagecolorallocate($image, $this->bgColors[0], $this->bgColors[1], $this->bgColors[2]);
         imagefill($image, 0, 0, $bgColor);
@@ -61,7 +62,7 @@ class Captcha
             $y= rand($this->imageH*0.89, $this->imageH*0.97);
 
             $code .= $fontContext;
-            $ttfPath = 'C:\Users\wcz\Documents\GitHub\thinkphp-dome\public\static\fonts\1.ttf';
+
             imagettftext($image, $this->fontSize, rand($this->fontAngle[0], $this->fontAngle[1]), $x, $y, $fontColor, $this->ttfPath, $fontContext);
 
         }
@@ -83,6 +84,9 @@ class Captcha
 
         //销毁图像
         imagedestroy($image);
+        }catch(Exception $e){
+            echo $e;
+        }
         exit;
     }
 }

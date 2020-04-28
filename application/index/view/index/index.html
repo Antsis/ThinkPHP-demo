@@ -40,12 +40,9 @@
                     
                     <form class="container-lg">
                         <div class="form-group">
-                            <label for="login-phone">手机</label>
+                            <label for="login-phone">手机/邮箱</label>
                             <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">+86</div>
-                                </div>
-                                <input type="text" class="form-control" id="login-phone" placeholder="请输入11位手机号" maxlength="11"/>
+                                <input type="text" class="form-control" id="login-phone" placeholder="请输入手机号或者邮箱" maxlength="11"/>
                                 <div class="invalid-feedback"></div>
                             </div>
                         </div>
@@ -63,12 +60,9 @@
                 <div class="tab-pane fade mt-2" id="reg-page1" role="tabpanel" aria-labelledby="reg-tab">
                     <form class="container-lg">
                         <div class="form-group">
-                            <label for="reg-phone">手机</label>
+                            <label for="reg-phone-email">手机/邮箱</label>
                             <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">+86</div>
-                                </div>
-                                <input type="text" class="form-control" id="reg-phone" placeholder="请输入11位手机号" maxlength="11"/>
+                                <input type="text" class="form-control" id="reg-phone-email" placeholder="请输入手机号或者邮箱"/>
                                 <div class="invalid-feedback"></div>
                             </div>
                         </div>
@@ -83,7 +77,7 @@
                                     </span>
                                 </div>
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text"><img id="code-img" src="{:url('__URL__/verify')}" alt="captcha" onclick="this.setAttribute('src', '{:url(\'__URL__/verify\')}?id=\'+Math.random()');"></span>
+                                    <span class="input-group-text"><img id="code-img" src="{:url('index/login/verify')}" alt="captcha" onclick="this.setAttribute('src', '{:url(\'index/login/verify\')}?id=\'+Math.random()');"></span>
                                 </div>
                                 <div class="invalid-feedback"></div>
                             </div>
@@ -117,14 +111,14 @@
           </button>
         </div>
         <div class="modal-body ">
-            <h4 class="text-center">填写短信验证码和密码完成注册</h4>
-            <p class="text-center">短信验证码已发送至 +86 <span id="phonenum"></span></p>
+            <h4 class="text-center">填写验证码和密码完成注册</h4>
+            <p class="text-center">验证码已发送至 <span id="feedback-phone-email"></span></p>
             
             <form class="container-lg">
                 <div class="form-group">
-                    <label for="sms-code">短信验证码</label>
+                    <label for="sms-code">验证码</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="sms-code" placeholder="请输入6位短信验证码" maxlength="6"/>
+                        <input type="text" class="form-control" id="sms-code" placeholder="请输入6位验证码" maxlength="6"/>
                         <div class="input-group-prepend">
                             <button class="input-group-text" id="resend" type="button">重新发送验证码</button>
                         </div>

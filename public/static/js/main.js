@@ -1,25 +1,32 @@
 $(document).ready(function(){
+
+    // 手机号正则表达式 /^1[3-9]\d{9}$/
+    // 邮箱正则表达式 /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+    // 密码强度正则表达式  
+
     //reg
-    var phoneFlag = 0;
+    var phone_emailFlag = 0;
     var codeFlag = 0;
     var waitTime=60;
     var passwdFlag =0;
     var lphoneFlag = 0;
     var lpassFlag = 0;
 
-    $("#reg-phone").change(function(){
-        if(!/^1[3-9]\d{9}$/.test($(this).val())){
-            $(this).removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("请输入正确的手机号码");
-            phoneFlag = 0;
-        }else {
+    $("#reg-phone-email").change(function(){
+        if(/^1[3-9]\d{9}$/.test($(this).val())||/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test($(this).val())){
             $(this).removeClass("is-invalid").addClass("is-valid");
-            phoneFlag = 1;
+            phone_emailFlag = 1;
+        }else {
+            $(this).removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("请输入正确的手机号码或邮箱");
+            phone_emailFlag = 0;
         }
     })
+
+    //验证码动态检测
     $("#code").change(function(){
         $.ajax({
             type: "POST",
-            url: "index/index/checkCode",
+            url: "index/login/checkCode",
             data: {
                 "code" : $("#code").val(),
             },
@@ -37,6 +44,8 @@ $(document).ready(function(){
             }
         })
     })
+
+    //注册协议
     $("#reg-license").click(()=>{
         if($("#reg-license").is(":checked")){
             $("#reg-license").removeClass("is-invalid").addClass("is-valid");
@@ -44,17 +53,21 @@ $(document).ready(function(){
             $("#reg-license").removeClass("is-valid").addClass("is-invalid");
         }
     })
+
+    //注册按钮检测
     $("#reg-submit").click(function(){
-        if(phoneFlag){
-            $("#reg-phone").removeClass("is-invalid").addClass("is-valid");
+        if(phone_emailFlag){
+            $("#reg-phone-email").removeClass("is-invalid").addClass("is-valid");
         }else{
-            $("#reg-phone").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("请填写手机号");
+            $("#reg-phone-email").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("请填写手机号或邮箱");
             return false;
         }
         if(codeFlag){
             $("#code").removeClass("is-invalid").addClass("is-valid");
         }else{
-            $("#code").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("请输入验证码");
+            if($("#code").val()==0){
+                $("#code").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("请输入验证码");
+            }
             return false;
         }
         
@@ -64,11 +77,12 @@ $(document).ready(function(){
             $("#reg-license").removeClass("is-valid").addClass("is-invalid");
             return false;
         }
+
         $.ajax({
             type: "POST",
-            url: "index/index/register",
+            url: "index/login/register",
             data: {
-                "phone" : $("#reg-phone").val(),
+                "phone_email" : $("#reg-phone-email").val(),
                 "code" : $("#code").val()
             },
             success: data=> {
@@ -77,13 +91,13 @@ $(document).ready(function(){
                 }else if(data=="error1"){
                     $("#code").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("验证码错误");
                 }else if(data=="error2"){
-                    $("#reg-phone").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("请输入正确的手机号码");
+                    $("#reg-phone").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("请输入正确的手机号码或邮箱");
                 }else{
-                    $("#phonenum").text(data);
+                    $("#feedback-phone-email").text(data);
                     time($("#resend"));
                     $("#reg-reset").click();
                     $("#code").removeClass("is-invalid is-valid");
-                    $("#reg-phone").removeClass("is-invalid is-valid");
+                    $("#reg-phone-email").removeClass("is-invalid is-valid");
                     $("#reg-license").removeClass("is-invalid is-valid");
                 }
             },
@@ -95,7 +109,7 @@ $(document).ready(function(){
     })
 
     $("#refresh").on({click:function(){
-        $("#code-img").attr("src", "index/index/verify?id="+Math.random());
+        $("#code-img").attr("src", "index/login/verify?id="+Math.random());
         $("#code").removeClass("is-invalid");
     },mouseover:function(){
         $(this).children().css({
@@ -129,7 +143,7 @@ $(document).ready(function(){
     $("#resend").click(function(){
         $.ajax({
             type: "POST",
-            url: "index/index/sendCodeSms",
+            url: "index/login/sendCodeSms",
             success: ()=>{
                 time($(this));
             },
@@ -138,7 +152,7 @@ $(document).ready(function(){
             }
         })
     })
-    //reg2  
+
     $("#reg-password").change(function(){
         var $p = $(this).val();
         if(($p.length>7&&$p.length<21)&&((/\d/.test($p)&&/[a-zA-Z]/.test($p))||(/[a-zA-Z]/.test($p)&&/\W/.test($p))||(/\d/.test($p)&&/\W/.test($p)))){
@@ -149,6 +163,7 @@ $(document).ready(function(){
             passwdFlag = 0;
         }
     })
+
     $("#reg-submit2").click(function(){
         if(passwdFlag){
             $("#reg-password").removeClass("is-invalid").addClass("is-valid");
@@ -158,17 +173,17 @@ $(document).ready(function(){
         }
         $.ajax({
             type: "POST",
-            url: "index/index/register2",
+            url: "index/login/register2",
             data: {
-                "smscode": $("#sms-code").val(),
+                "code": $("#sms-code").val(),
                 "password": $("#reg-password").val()
             },success: data=>{
                 if(data=="error"){
                     alert("服务器错误")
-                }else if(data=="error1"){
-                    $("#reg-password").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("密码强度不符合要求, 请输入8-20位字母/数字/符号,至少包含两种的密码");
                 }else if(data=="error2"){
-                        $("#sms-code").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("验证码错误");
+                    $("#reg-password").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("密码强度不符合要求, 请输入8-20位字母/数字/符号,至少包含两种的密码");
+                }else if(data=="error1"){
+                    $("#sms-code").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("验证码错误");
                 }else{
                     alert("成功注册");
                     $("#reg2-reset").click();
@@ -217,9 +232,9 @@ $(document).ready(function(){
         }
         $.ajax({
             type: "POST",
-            url: "index/index/login",
+            url: "index/login/login",
             data: {
-                "phone" : $("#login-phone").val(),
+                "login_i" : $("#login-phone").val(),
                 "password" : $("#login-password").val()
             },
             success: data=>{
@@ -232,7 +247,7 @@ $(document).ready(function(){
                 }else if(data=="error1"){
                     $("#login-phone").addClass("is-invalid").siblings(".invalid-feedback").text("此用户不存在");
                 }else if(data=="error2"){
-                    $("#login-password").addClass("is-invalid").siblings(".invalid-feedback").text("用户名或者手机号错误");
+                    $("#login-password").addClass("is-invalid").siblings(".invalid-feedback").text("用户名或者密码错误");
                 }else{
                     alert("服务器错误");
                 }

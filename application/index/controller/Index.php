@@ -44,24 +44,25 @@ class Index extends Controller
             return "error";
         }
         if(empty($_POST['phone'])){
-            return "error1";
+            return "error";
         }
         $code = strtolower($_POST['code']);
         $phoneNum = $_POST['phone'];
         if(Session::get('verify_code')==null){
-            return "error2";
+            return "error1";
         }
         if($code!=Session::get('verify_code')){
-            return "error3";
+            return "error1";
         }
         if(!(preg_match('/^1[3-9]\d{9}$/', $phoneNum))){
-            return "error4";
+            return "error2";
         }
         Session::set('phone', $phoneNum);
+        return $phoneNum;
         if($this->sendCodeSms()){
             return $phoneNum;
         }else{
-            return "error5";
+            return "error";
         }
         
     }
@@ -69,8 +70,14 @@ class Index extends Controller
     public function sendCodeSms()
     {
         $sm = new SendSms();
-        $sm->sendCodeSms(Session::get('phone'));
-        return 1;
+        $res = $sm->sendCodeSms(Session::get('phone'));
+        if($res==0){
+            return 0;
+        }else if($res==1){
+            return 1;
+        }else{
+            return 2;
+        }
     }
 
     public function register2()
@@ -79,24 +86,29 @@ class Index extends Controller
             return "error";
         }
         if(empty($_POST['password'])){
-            return "error1";
+            return "error";
         }
         $code = $_POST['smscode'];
         $p = $_POST['password'];
         if(Session::get('smsCode')==null){
-            return "error3";
+            return "error";
+        }
+        if($code!=Session::get('smsCode')){
+            return "error2";
         }
         if(!((strlen($p)>7&&strlen($p)<21)&&((preg_match('/\d/', $p)&&preg_match('/[a-zA-Z]/', $p))||(preg_match('/[a-zA-Z]/', $p)&&preg_match('/\W/', $p))||(preg_match('/\d/', $p)&&preg_match('/\W/', $p))))){
-            return "error4";
+            return "error1";
         }
         if(Session::get('phone')==null){
-            return "error5";
+            return "error";
         }
+        
         $phone = Session::get('phone');
         if($this->regCreate($phone, $p)){
+            
             return "success";
         }else{
-            return "error6";
+            return "error";
         }
     }
 
@@ -129,23 +141,26 @@ class Index extends Controller
             return "error";
         }
         if(empty($_POST['password'])){
-            return "error2";
+            return "error";
         }
         $phone = $_POST['phone'];
         $passwd = $_POST['password'];
         try{
-        $res = Web::where('phone', '18889288054')
-            ->field("phone, password")
-            ->find();
+        $res = Web::where('phone', $phone)
+                ->find();
+        if(empty($res)){
+            return "error1";
+        }
         $array = $res->toArray();
         $phoneS = $array['phone'];
         $passwdS = $array['password'];
         }catch(Exception $e){
-            return "error3";
+            return "error";
         }
         if($phoneS==$phone&&$passwdS==$passwd){
+            Session::set('logined', $res);
             return "success";
-        }else return "error4";
+        }else return "error2";
     }
 
     public function test()

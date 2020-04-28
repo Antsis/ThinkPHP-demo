@@ -46,7 +46,7 @@
                                     <div class="input-group-text">+86</div>
                                 </div>
                                 <input type="text" class="form-control" id="login-phone" placeholder="请输入11位手机号" maxlength="11"/>
-                                <div class="invalid-feedback">手机号格式错误</div>
+                                <div class="invalid-feedback"></div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -69,7 +69,7 @@
                                     <div class="input-group-text">+86</div>
                                 </div>
                                 <input type="text" class="form-control" id="reg-phone" placeholder="请输入11位手机号" maxlength="11"/>
-                                <div class="invalid-feedback">请输入正确的手机号码</div>
+                                <div class="invalid-feedback"></div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -85,7 +85,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><img id="code-img" src="{:url('__URL__/verify')}" alt="captcha" onclick="this.setAttribute('src', '{:url(\'__URL__/verify\')}?id=\'+Math.random()');"></span>
                                 </div>
-                                <div class="invalid-feedback">请输入正确的验证码</div>
+                                <div class="invalid-feedback"></div>
                             </div>
                         </div>
                         <div class="form-group form-check">
@@ -128,13 +128,13 @@
                         <div class="input-group-prepend">
                             <button class="input-group-text" id="resend" type="button">重新发送验证码</button>
                         </div>
-                        <div class="invalid-feedback">请输入正确的验证码</div>
+                        <div class="invalid-feedback"></div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="reg-password">密码</label>
                     <input type="password" class="form-control" id="reg-password" placeholder="请输入8-20位字母/数字/符号,至少包含两种的密码"/>
-                    <div class="invalid-feedback">密码强度不符合要求</div>
+                    <div class="invalid-feedback"></div>
                 </div>
                 <button id="reg-submit2" type="submit" class="btn btn-primary btn-block mb-2 mt-4" data-dismiss="modal">完成</button>
                 <button id="reg2-reset" type="reset" class="invisible position-absolute" aria-hidden="true"></button>
@@ -173,49 +173,7 @@
 
     <script>
         $(document).ready(function(){
-            // var lphoneFlag=0;
-            // $("#login-phone").change(function(){
-            //     if(/^1[3-9]\d{9}$/.test($(this).val())){
-            //         lphoneFlag = 1;
-            //         $(this).addClass("is-valid").removeClass("is-invalid");
-            //     }else {
-            //         lphoneFlag=0;
-            //         $(this).addClass("is-invalid").removeClass("is-valid");
-            //     }
-            // })
-            // $("#login-password").focus(function(){
-            //     $(this).removeClass("is-invalid");
-            // })
-            // $("#login").click(function(){
-            //     if(lphoneFlag){
-            //         $("#login-phone").addClass("is-valid").removeClass("is-invalid");
-            //     }else{
-            //         $("#login-phone").addClass("is-invalid").removeClass("is-valid");
-            //         return false;
-            //     }
-            //     $.ajax({
-            //         type: "POST",
-            //         url: "index/index/login",
-            //         data: {
-            //             "phone" : $("#login-phone").val(),
-            //             "password" : $("#login-password").val()
-            //         },
-            //         success: data=>{
-            //             if(data=="success"){
-            //                 alert("登录成功");
-            //                 $("#login-password").removeClass("is-invalid");
-            //                 $("#login-reset").click();
-            //             }else{
-            //                 alert("登录失败");
-            //                 $("#login-password").addClass("is-invalid");
-            //             }
-            //         },
-            //         error: ()=>{
-            //             alert("服务器错误")
-            //         }
-            //     })
-            //     return false;
-            // })
+            $("#login-btn")
         })
     </script>
 

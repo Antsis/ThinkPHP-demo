@@ -1,5 +1,4 @@
 $(document).ready(function(){
-
     // 手机号正则表达式 /^1[3-9]\d{9}$/
     // 邮箱正则表达式 /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
     // 密码强度正则表达式  
@@ -7,7 +6,7 @@ $(document).ready(function(){
     //reg
     var phone_emailFlag = 0;
     var codeFlag = 0;
-    var waitTime=60;
+    
     var passwdFlag =0;
     var lphoneFlag = 0;
     var lpassFlag = 0;
@@ -26,7 +25,7 @@ $(document).ready(function(){
     $("#code").change(function(){
         $.ajax({
             type: "POST",
-            url: "index/login/checkCode",
+            url: $(this).attr("data-purl"),
             data: {
                 "code" : $("#code").val(),
             },
@@ -40,7 +39,14 @@ $(document).ready(function(){
                 }
             },
             error: () => {
-                alert("服务器错误")
+                $("body").append(`
+                    <div class="alert alert-danger alert-dismissible fade show fixed-top text-center" role="alert">
+                        <strong>服务器错误!</strong>请联系管理员
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                  `);
             }
         })
     })
@@ -80,14 +86,21 @@ $(document).ready(function(){
 
         $.ajax({
             type: "POST",
-            url: "index/login/register",
+            url: $(this).attr("data-purl"),
             data: {
                 "phone_email" : $("#reg-phone-email").val(),
                 "code" : $("#code").val()
             },
             success: data=> {
                 if(data=="error"){
-                    alert("服务器错误");
+                    $("body").append(`
+                    <div class="alert alert-danger alert-dismissible fade show fixed-top text-center" role="alert">
+                        <strong>服务器错误!</strong>请联系管理员
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                  `);
                 }else if(data=="error1"){
                     $("#code").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("验证码错误");
                 }else if(data=="error2"){
@@ -102,7 +115,14 @@ $(document).ready(function(){
                 }
             },
             error: ()=>{
-                alert("服务器错误");
+                $("body").append(`
+                    <div class="alert alert-danger alert-dismissible fade show fixed-top text-center" role="alert">
+                        <strong>服务器错误!</strong>请联系管理员
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                  `);
             }
         })
         $("#code-img").click();
@@ -125,30 +145,22 @@ $(document).ready(function(){
     }).css("cursor","pointer")
 
     // reg2
-    function time(ele) {
-        if (waitTime == 0) {
-            ele.removeAttr("disabled");
-            ele.text("重新发送验证码");
-            waitTime = 60;
-        } else {
-            ele.attr("disabled", "disabled")
-            ele.text("重新发送验证码("+waitTime+"s)");
-            waitTime--;
-            setTimeout(function() {
-                time(ele)
-            }, 1000)
-        }
-    }
+    
 
     $("#resend").click(function(){
+        time($(this));
         $.ajax({
             type: "POST",
-            url: "index/login/sendCodeSms",
-            success: ()=>{
-                time($(this));
-            },
+            url: $(this).attr("data-purl"),
             error: ()=>{
-                alert("服务器错误");
+                $("body").append(`
+                    <div class="alert alert-danger alert-dismissible fade show fixed-top text-center" role="alert">
+                        <strong>服务器错误!</strong>请联系管理员
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                  `);
             }
         })
     })
@@ -173,28 +185,50 @@ $(document).ready(function(){
         }
         $.ajax({
             type: "POST",
-            url: "index/login/register2",
+            url: $(this).attr("data-purl"),
             data: {
                 "code": $("#sms-code").val(),
                 "password": $("#reg-password").val()
             },success: data=>{
                 if(data=="error"){
-                    alert("服务器错误")
+                    $("body").append(`
+                    <div class="alert alert-danger alert-dismissible fade show fixed-top text-center" role="alert">
+                        <strong>服务器错误!</strong>请联系管理员
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                  `);
                 }else if(data=="error2"){
                     $("#reg-password").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("密码强度不符合要求, 请输入8-20位字母/数字/符号,至少包含两种的密码");
                 }else if(data=="error1"){
                     $("#sms-code").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("验证码错误");
                 }else{
-                    alert("成功注册");
+                    $("body").append(`
+                    <div class="alert alert-success alert-dismissible fade show fixed-top text-center" role="alert">
+                        <strong>成功注册!</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                  `);
+                    logined();
                     $("#reg2-reset").click();
                     $("#reg-password").removeClass("is-invalid is-valid");
                 }
             },error: ()=>{
-                alert("服务器错误");
+                $("body").append(`
+                    <div class="alert alert-danger alert-dismissible fade show fixed-top text-center" role="alert">
+                        <strong>服务器错误!</strong>请联系管理员
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                  `);
             }
         })
     })
-
+    
     // login
     $("#login-phone").change(function(){
         if(/^1[3-9]\d{9}$/.test($(this).val())){
@@ -232,7 +266,7 @@ $(document).ready(function(){
         }
         $.ajax({
             type: "POST",
-            url: "index/login/login",
+            url: $(this).attr("data-purl"),
             data: {
                 "login_i" : $("#login-phone").val(),
                 "password" : $("#login-password").val()
@@ -240,7 +274,15 @@ $(document).ready(function(){
             success: data=>{
                 if(data=="success"){
                     $("#modal").modal("hide");
-                    alert("登录成功");
+                    $("body").append(`
+                    <div class="alert alert-success alert-dismissible fade show fixed-top text-center" role="alert">
+                        <strong>登录成功!</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                  `);
+                    logined();
                     $("#login-password").removeClass("is-invalid is-valid");
                     $("#login-phone").removeClass("is-valid is-invalid");
                     $("#login-reset").click();
@@ -249,13 +291,56 @@ $(document).ready(function(){
                 }else if(data=="error2"){
                     $("#login-password").addClass("is-invalid").siblings(".invalid-feedback").text("用户名或者密码错误");
                 }else{
-                    alert("服务器错误");
+                    $("body").append(`
+                    <div class="alert alert-danger alert-dismissible fade show fixed-top text-center" role="alert">
+                        <strong>服务器错误!</strong>请联系管理员
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                  `);
                 }
             },
             error: ()=>{
-                alert("服务器错误")
+                $("body").append(`
+                    <div class="alert alert-danger alert-dismissible fade show fixed-top text-center" role="alert">
+                        <strong>服务器错误!</strong>请联系管理员
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                  `);
             }
         })
         return false;
     })
+    
 })
+function logined(){
+    $.ajax({
+        type: "POST",
+        url: $("#login-btn").attr("data-purl"),
+        success: data=>{
+            if(data=="success"){
+                $("#login-btn").attr("onclick", "window.location.href='"+$("#login-btn").attr("data-url")+"'").attr("data-toggle", "").html("<i class='fa fa-user-o' aria-hidden='true'></i>")
+            }else{
+                $("#login-btn").attr("onclick", '').attr('data-togle', 'modal').html("登录")
+            };
+        }
+    })
+}
+var waitTime=60;
+function time(ele) {
+    if (waitTime == 0) {
+        ele.removeAttr("disabled");
+        ele.text("重新发送验证码");
+        waitTime = 60;
+    } else {
+        ele.attr("disabled", "disabled")
+        ele.text("重新发送验证码("+waitTime+"s)");
+        waitTime--;
+        setTimeout(function() {
+            time(ele)
+        }, 1000)
+    }
+}

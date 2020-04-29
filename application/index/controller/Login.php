@@ -69,6 +69,12 @@ class Login extends Controller
             }else return 'error2';
         }else return "error2";
     }
+    public function sendCodeSmsEmail()
+    {
+        if(Session::get('reg_state')){
+            $this->sendCodeSms();
+        }else $this->sendCodeSmsEmail();
+    }
 
     public function sendCodeEmail()
     {

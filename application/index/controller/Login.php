@@ -34,9 +34,6 @@ class Login extends Controller
         }
     }
 
-
-
-
     public function register()
     {   
         if(empty($_POST['code'])){
@@ -55,6 +52,9 @@ class Login extends Controller
         if($code!=Session::get('verify_code')){
             return "error1";
         }
+        if($this->cehckUserIs($phoneEmail)){
+            return 'error3';
+        }
         if(preg_match('/^1[3-9]\d{9}$/', $phoneEmail)){
             Session::set('phone', $phoneEmail);
             Session::set('reg_state', '1');
@@ -69,12 +69,24 @@ class Login extends Controller
             }else return 'error2';
         }else return "error2";
     }
+
+    public function cehckUserIs($login)
+    {
+        $res = Web::where('phone', $login)
+                ->whereor('email', $login)
+                ->find();
+        if($res){
+            return 1;
+        }else return 0;
+    }
+
     public function sendCodeSmsEmail()
     {
         if(Session::get('reg_state')){
             $this->sendCodeSms();
         }else $this->sendCodeSmsEmail();
     }
+
 
     public function sendCodeEmail()
     {
@@ -141,6 +153,8 @@ class Login extends Controller
             }else return "error";
         }
     }
+    
+    
 
     public function regCreatePhone($phone, $passwd)
     {
@@ -199,6 +213,7 @@ class Login extends Controller
         try{
         $res = Web::where('phone', $login)
                 ->whereor('email', $login)
+                ->whereor('username', $login)
                 ->find();
         if(empty($res)){
             return "error1";

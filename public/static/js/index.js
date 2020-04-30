@@ -76,17 +76,16 @@ $(document).ready(function(){
             }
             return false;
         }
-        
         if($("#reg-license").is(":checked")){
             $("#reg-license").removeClass("is-invalid").addClass("is-valid");
         }else{
             $("#reg-license").removeClass("is-valid").addClass("is-invalid");
             return false;
         }
-
         $.ajax({
             type: "POST",
             url: $(this).attr("data-purl"),
+            async: false,
             data: {
                 "phone_email" : $("#reg-phone-email").val(),
                 "code" : $("#code").val()
@@ -100,11 +99,13 @@ $(document).ready(function(){
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                  `);
+                    `);
                 }else if(data=="error1"){
                     $("#code").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("验证码错误");
                 }else if(data=="error2"){
-                    $("#reg-phone").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("请输入正确的手机号码或邮箱");
+                    $("#reg-phone-email").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("请输入正确的手机号码或邮箱");
+                }else if(data=="error3"){
+                    $("#reg-phone-email").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("此用户已经存在");
                 }else{
                     $("#feedback-phone-email").text(data);
                     time($("#resend"));
@@ -112,6 +113,8 @@ $(document).ready(function(){
                     $("#code").removeClass("is-invalid is-valid");
                     $("#reg-phone-email").removeClass("is-invalid is-valid");
                     $("#reg-license").removeClass("is-invalid is-valid");
+                    $("#modal").modal("hide");
+                    $("#staticBackdrop").modal("show");
                 }
             },
             error: ()=>{
@@ -125,11 +128,14 @@ $(document).ready(function(){
                   `);
             }
         })
+
         $("#code-img").click();
+        $("#code").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("请修改验证码");
+        return false;
     })
 
     $("#refresh").on({click:function(){
-        $("#code-img").attr("src", "index/login/verify?id="+Math.random());
+        $("#code-img").attr("src", $("#code-img").attr("src")+"?id="+Math.random());
         $("#code").removeClass("is-invalid");
     },mouseover:function(){
         $(this).children().css({
@@ -146,7 +152,6 @@ $(document).ready(function(){
 
     // reg2
     
-
     $("#resend").click(function(){
         time($(this));
         $.ajax({
@@ -231,13 +236,12 @@ $(document).ready(function(){
     
     // login
     $("#login-phone").change(function(){
-        if(/^1[3-9]\d{9}$/.test($(this).val())){
+        if($(this).val()!=0){
             lphoneFlag = 1;
             $(this).removeClass("is-invalid")
-            
         }else {
             lphoneFlag=0;
-            $(this).addClass("is-invalid").removeClass("is-valid").siblings(".invalid-feedback").text("手机号格式错误");
+            $(this).addClass("is-invalid").removeClass("is-valid").siblings(".invalid-feedback").text("请填写手机号, 邮箱或用户名");
         }
     })
 
@@ -257,7 +261,7 @@ $(document).ready(function(){
         if(lphoneFlag){
             $("#login-phone").addClass("is-valid").removeClass("is-invalid");
         }else{
-            $("#login-phone").addClass("is-invalid").removeClass("is-valid").siblings(".invalid-feedback").text("请填写手机号");
+            $("#login-phone").addClass("is-invalid").removeClass("is-valid").siblings(".invalid-feedback").text("请填写手机号, 邮箱或用户名");
             return false;
         }
         if(!lpassFlag){
@@ -289,7 +293,7 @@ $(document).ready(function(){
                 }else if(data=="error1"){
                     $("#login-phone").addClass("is-invalid").siblings(".invalid-feedback").text("此用户不存在");
                 }else if(data=="error2"){
-                    $("#login-password").addClass("is-invalid").siblings(".invalid-feedback").text("用户名或者密码错误");
+                    $("#login-password").addClass("is-invalid").siblings(".invalid-feedback").text("账号或者密码错误");
                 }else{
                     $("body").append(`
                     <div class="alert alert-danger alert-dismissible fade show fixed-top text-center" role="alert">
@@ -322,9 +326,9 @@ function logined(){
         url: $("#login-btn").attr("data-purl"),
         success: data=>{
             if(data=="success"){
-                $("#login-btn").attr("onclick", "window.location.href='"+$("#login-btn").attr("data-url")+"'").attr("data-toggle", "").html("<i class='fa fa-user-o' aria-hidden='true'></i>")
+                $("#login-btn").attr("onclick", "window.location.href='"+$("#login-btn").attr("data-url")+"'").removeAttr("data-toggle").html("<i class='fa fa-user-o' aria-hidden='true'></i>")
             }else{
-                $("#login-btn").attr("onclick", '').attr('data-togle', 'modal').html("登录")
+                $("#login-btn").removeAttr("onclick").attr('data-togle', 'modal').html("登录")
             };
         }
     })

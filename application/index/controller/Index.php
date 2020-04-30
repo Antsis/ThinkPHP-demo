@@ -19,7 +19,10 @@ class Index extends Controller
             return "success";
         }else return "error";
     }
-    
+    public function about()
+    {
+        return $this->fetch();
+    }
 
     public function test()
     {

@@ -16,9 +16,10 @@ class Index extends Controller
     public function checkLogined()
     {
         if(Session::get('logined')!=null){
-            return "success";
-        }else return "error";
+            return "logged";
+        }else return "notloged";
     }
+
     public function about()
     {
         return $this->fetch();

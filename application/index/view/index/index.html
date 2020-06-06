@@ -4,9 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="__CSS__/font-awesome.min.css">
-    <link rel="stylesheet" href="__CSS__/style.css">
-    <link href="__CSS__/bootstrap.css" rel="stylesheet">
+    {include file="common/css"}
     <title>thinkphp-dome</title>
 </head>
 <body>
@@ -19,23 +17,18 @@
   <!-- mainText -->
   <div class="container">
     <div class="jumbotron mt-4">
-        <h1 class="display-4">Hello, world!</h1>
-        <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+        <h1 class="display-4">欢迎访问!</h1>
+        <p class="lead"></p>
         <hr class="my-4">
-        <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-
-        <a id="test" class="btn btn-primary btn-lg" href="#" role="button" >Learn more</a>
-        <p>TODO</p>
+        <p></p>
+        <p>学生信息管理系统</p>
     </div>
     </div>
 
 
     <!-- footer -->
     {include file="common/footer"}
-    <script src="__JS__/jquery-3.5.1.min.js"></script>
-    <script src="__JS__/popper.min.js"></script>
-    <script src="__JS__/bootstrap.js"></script>
-    <script src="__JS__/index.js"></script>
+    {include file="common/js"}
 
     <script>
         $(document).ready(function(){

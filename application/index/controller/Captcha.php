@@ -7,14 +7,14 @@ use think\Session;
 
 class Captcha
 {
+
     protected $config = [
         'imageH'    => 24,
         'imageW'    => 100,
         'length'    => 4,
         'fontSize'  => 22,
         'fontAngle' => [-10, 10],
-        'bgColors'  =>  [233,236,239],
-        'ttfPath'   => __DIR__ . '/assets/ttfs/1.ttf'
+        'bgColors'  =>  [233,236,239]
     ];
 
     public function __construct($config = [])
@@ -48,6 +48,7 @@ class Captcha
         $bgColor = imagecolorallocate($image, $this->bgColors[0], $this->bgColors[1], $this->bgColors[2]);
         imagefill($image, 0, 0, $bgColor);
 
+        $ttfPath = __DIR__ .'/assets/ttfs/1.ttf';
         //描绘内容
         $data = '2345678abcdefhijkmnpqrstuvwxyzABCDEFGHJKLMNPQRTUVWXY';
 
@@ -63,7 +64,7 @@ class Captcha
 
             $code .= $fontContext;
 
-            imagettftext($image, $this->fontSize, rand($this->fontAngle[0], $this->fontAngle[1]), $x, $y, $fontColor, $this->ttfPath, $fontContext);
+            imagettftext($image, $this->fontSize, rand($this->fontAngle[0], $this->fontAngle[1]), $x, $y, $fontColor, $ttfPath, $fontContext);
 
         }
         //设置session

@@ -24,10 +24,6 @@ class Index extends Controller
         return $this->fetch();
     }
 
-    public function test()
-    {
-        
-    }
 
     public function userInfo()
     {

@@ -9,9 +9,9 @@
 </head>
 <body>
     <!-- nav -->
-    {include file="common/nav"}
     <!-- loging & register  -->
-    {include file="common/reglogin"}
+    {include file="common/nav,common/reglogin"}
+    
 
 
   <!-- mainText -->
@@ -33,6 +33,7 @@
     <script>
         $(document).ready(function(){
             logined()
+            $("#index-page").addClass("active")
         })
     </script>
     

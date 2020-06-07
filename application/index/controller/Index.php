@@ -25,24 +25,21 @@ class Index extends Controller
         return $this->fetch();
     }
 
+    public function contact()
+    {
+        return $this->fetch();
+    }
 
     public function userInfo()
     {
         if(Session::get('logined')==null){
-            $this->redirect('index/index', '', 200, [
-                'wait'  => 3,
-                'msg'   => '请您登录'
-            ]);
-        }
-        return $this->fetch();
+            $this->error('请您登录');
+        }else $this->redirect('profile/profile');
     }
 
     public function logout()
     {
         Session::clear();
-        $this->redirect('index/index', "", 200, [ 
-            'wait'  => 0, 
-            'msg'   => '正在跳转'
-        ]);
+        $this->success('正在跳转', 'index/index');
     }
 }

@@ -210,13 +210,13 @@ $(document).ready(function(){
                     $("#sms-code").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("验证码错误");
                 }else{
                     $("body").append(`
-                    <div class="alert alert-success alert-dismissible fade show fixed-top text-center" role="alert">
-                        <strong>成功注册!</strong>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                  `);
+                        <div class="alert alert-success alert-dismissible fade show fixed-top text-center" role="alert">
+                            <strong>成功注册!</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    `);
                     logined();
                     $("#reg2-reset").click();
                     $("#reg-password").removeClass("is-invalid is-valid");
@@ -318,21 +318,10 @@ $(document).ready(function(){
         })
         return false;
     })
+
     
 })
-function logined(){
-    $.ajax({
-        type: "POST",
-        url: $("#login-btn").attr("data-purl"),
-        success: data=>{
-            if(data=="logged"){
-                $("#login-btn").attr("onclick", "window.location.href='"+$("#login-btn").attr("data-url")+"'").removeAttr("data-toggle").html("<i class='fa fa-user-o' aria-hidden='true'></i>")
-            }else{
-                $("#login-btn").removeAttr("onclick").attr('data-togle', 'modal').html("登录")
-            };
-        }
-    })
-}
+
 var waitTime=60;
 function time(ele) {
     if (waitTime == 0) {

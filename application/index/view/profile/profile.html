@@ -12,47 +12,61 @@
 <div class="container bg-light">
     <form class="px-3">
         <div class="form-group row">
+          <label for="staticId" class="col-sm-2 col-form-label">ID</label>
+          <div class="col-sm-4">
+            <input type="text" readonly class="form-control-plaintext" id="staticId" value="{$data.id}">
+          </div>
+        </div>
+        <div class="form-group row">
           <label for="staticUsername" class="col-sm-2 col-form-label">用户名</label>
           <div class="col-sm-4">
-            <input type="text" readonly class="form-control-plaintext" id="staticUsername" value="">
+            <input type="text" readonly class="form-control-plaintext" id="staticUsername" value="{$data.username}">
           </div>
         </div>
 
         <div class="form-group row">
           <label for="name" class="col-sm-2 col-form-label">姓名</label>
           <div class="col-sm-4">
-            <input type="text" class="form-control" id="name">
+            <input type="text" class="form-control" id="name" value="{$data.name}">
+            <div class="invalid-feedback"></div>
           </div>
         </div>
         <div class="form-group row">
             <label for="gender" class="col-sm-2 col-form-label">性别</label>
             <div class="col-sm-2">
                 <select class="custom-select mr-sm-2" id="gender">
-                    <option selected>保密</option>
-                    <option value="1">女</option>
-                    <option value="2">男</option>
+                  {switch name="data.gender" }
+                      {case value="0"}
+                        <option value="0" selected>保密</option>
+                        <option value="2">女</option>
+                        <option value="1">男</option>
+                      {/case}
+                      {case value="1"}
+                        <option value="0">保密</option>
+                        <option value="2">女</option>
+                        <option value="1" selected>男</option>
+                      {/case}
+                      {case value="2"}
+                        <option value="0">保密</option>
+                        <option value="2" selected>女</option>
+                        <option value="1">男</option>
+                      {/case}
+                      {default /}
+                        <option value="0" selected>保密</option>
+                        <option value="2">女</option>
+                        <option value="1">男</option>
+                  {/switch}
+                    
                   </select>
             </div>
           </div>
         <div class="form-group row">
-            <label for="birthday-y" class="col-sm-2 col-form-label">生日</label>
+            <label for="birthday" class="col-sm-2 col-form-label">生日</label>
             <div class="col-sm-5">
                 <div class="row">
                     <div class="col-6">
-                        <select class="custom-select mr-sm-2" id="birthday-y">
-                            <option selected>年</option>
-                          </select>
-                      </div>
-                      <div class="col-3">
-                        <select class="custom-select mr-sm-2" id="birthday-m">
-                            <option selected>月</option>
-                          </select>
-                      </div>
-                      <div class="col-3">
-                        <select class="custom-select mr-sm-2" id="birthday-d">
-                            <option selected>日</option>
-                          </select>
-                      </div>
+                      <input id="birthday" type="date" value="{$data.birthday}">
+                    </div>
                 </div>
             </div>
         </div>
@@ -81,15 +95,17 @@
         <div class="form-group row">
             <label for="signature" class="col-sm-2 col-form-label">个性签名</label>
             <div class="col-sm-10">
-                <textarea class="form-control"  id="signature"></textarea>
-            </div>
+                <textarea class="form-control" id="signature">{$data.signature}</textarea>
+                <div class="invalid-feedback"></div>
+              </div>
         </div>
         <div class="form-group row py-4">
             <div class="col text-center">
-              <button type="submit" class="btn btn-primary">保存</button>
+              <button id="profile-save" type="submit" class="btn btn-primary" data-purl="{:url('@index/profile/profileSave')}">保存</button>
             </div>
           </div>
     </form>
+    
 </div>
 
 {/block}

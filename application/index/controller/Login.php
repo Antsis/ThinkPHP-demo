@@ -12,6 +12,12 @@ use think\Controller;
 
 class Login extends Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+        new Web();
+    }
+
     public function verify()
     {     
         $captcha = new Captcha();
@@ -87,18 +93,20 @@ class Login extends Controller
         }else $this->sendCodeSmsEmail();
     }
 
-
+    //这里调用了PHPMailer发送邮件
     public function sendCodeEmail()
     {
+        //此类涉及个人账户
         $sm = new SendEmail();
         $res = $sm->sendCodeEmail(Session::get('email'));
         if($res==0){
             return 1;
         }else return 0;
     }
-
+    // 这里是调用阿里云的短信服务
     public function sendCodeSms()
     {
+        //此类涉及个人账户
         $sm = new SendSms();
         $res = $sm->sendCodeSms(Session::get('phone'));
         if($res==0){
@@ -127,13 +135,12 @@ class Login extends Controller
                 return "error1";
             }
             $phone = Session::get('phone');
-            if($this->regCreatePhone($phone, $p)){
-                $array = [
-                    'phone'     => $phone,
-                    'passwd'    =>$p
-                ];
-                Session::set('logined', $array);
-                return "success";
+            $state = $this->regCreatePhone($phone, $p);
+            if($state!=0){
+                    $res = Web::get($state);
+                    $array = $res->toArray();
+                    Session::set('logined', $array);
+                    return "success";
             }else return "error";
         }else{
             if(Session::get('email_code')==null||Session::get('email')==null){
@@ -143,11 +150,10 @@ class Login extends Controller
                 return "error1";
             }
             $email = Session::get('email');
-            if($this->regCreateEmail($email, $p)){
-                $array = [
-                    'email'     => $email,
-                    'passwd'    => $p
-                ];
+            $state = $this->regCreateEmail($email, $p);
+            if($state!=0){
+                $res = Web::get($state);
+                $array = $res->toArray();
                 Session::set('logined', $array);
                 return "success";
             }else return "error";
@@ -171,7 +177,7 @@ class Login extends Controller
         $user->phone = $phone;
         try{
             if($user->save()){
-                return 1;
+                return $user->id;
             }else return 0;
         }catch(Exception $e){
             return 0;
@@ -195,7 +201,7 @@ class Login extends Controller
         $user->email = $email;
         try{
             if($user->save()){
-                return 1;
+                return $user->id;
             }else return 0;
         }catch(Exception $e){
             return 0;
@@ -207,6 +213,9 @@ class Login extends Controller
     {
         if(empty($_POST['login_i'])||empty($_POST['password'])){
             return "error";
+        }
+        if($_POST['login_i']=='null'){
+            return 'error1';
         }
         $login = $_POST['login_i'];
         $passwd = $_POST['password'];
@@ -230,5 +239,16 @@ class Login extends Controller
             Session::set('logined', $array);
             return "success";
         }else return "error2";
+    }
+
+    public function test()
+    {
+        $user = new Web;
+        $user->save([
+            'name' => $_POST['name'],
+            'gender' => $_POST['gender'],
+            // // 'birthday' => $date,
+            'signature' => $_POST['signature']
+        ], ['id' => 1]);
     }
 }

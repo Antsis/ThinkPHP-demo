@@ -19,6 +19,11 @@ class Index extends Controller
             return "logged";
         }else return "notloged";
     }
+    public function bbs()
+    {
+        return $this->fetch();
+    }
+
 
     public function about()
     {

@@ -3,6 +3,7 @@ namespace app\index\controller;
 
 use think\Controller;
 use think\Session;
+use think\Image;
 use app\index\model\Web;
 use Exception;
 
@@ -52,7 +53,10 @@ class Profile extends Controller{
         if(empty(Session::get('logined'))){
             $this->redirect('index/userinfo');
         }
+        $data=Session::get('logined');
+        $path = '/files/uploads/'. $data['username']. '/avatar_200.jpg';
         $this->assign('title', '修改头像');
+        $this->assign('avatar_url', $path);
         return view();
     }
     public function account()
@@ -94,9 +98,6 @@ class Profile extends Controller{
     }
     public function profileSave()
     {
-        if(empty($_POST['name'])&&empty($_POST['gender'])&&empty($_POST['birthday'])&&empty($_POST['signature'])){
-            return "success2";
-        }
         if(!empty($_POST['name'])){
             $name = $_POST['name'];
         }else $name = null;
@@ -117,7 +118,7 @@ class Profile extends Controller{
                 'gender' => $gender,
                 'birthday' => $date,
                 'signature' => $signature
-            ], ['id' => $array['id']]);
+            ], ['id' => 1]);
             return "success";
         }catch(Exception $e){
             return "error";
@@ -125,13 +126,9 @@ class Profile extends Controller{
     }
     public function profileContactSave()
     {
-        if(empty($_POST['qq'])){
-            return "success2";
-        }
-        $qq = $_POST['qq'];
-        if(!preg_match('/^[1-9][0-9]{4,11}$/', $qq)){
-            return 'error';
-        }
+        if($_POST['qq']==""){
+            $qq=null;
+        }else $qq = $_POST['qq'];
         $array = Session::get('logined');
         $user = new Web;
         try{
@@ -141,6 +138,27 @@ class Profile extends Controller{
             return "success";
         }catch(Exception $e){
             return "error";
+        }
+    }
+    public function avatarUpload()
+    {
+        $file = request()->file('image');
+        $data = Session::get('logined');
+        if($file){
+            $info = $file->validate(['ext'=>'jpg,jpeg,png', 'type'=>'image/png,image/jpeg']);
+            // ->move(ROOT_PATH . 'public' . DS . 'files'. DS. 'uploads'. DS. $data['username']. DS , '');
+            if($info){
+                $image = Image::open($file);
+                $info2 = $image->thumb(200, 200, 2)->save(ROOT_PATH . 'public' . DS . 'files'. DS. 'uploads'. DS. $data['username']. DS. 'avatar_200.jpg');
+                $info3 = $image->thumb(38, 38, 2)->save(ROOT_PATH . 'public' . DS . 'files'. DS. 'uploads'. DS. $data['username']. DS. 'avatar_38.jpg');
+                if($info2&&$info3){
+                    return 'success';
+                }else return 'error3';
+            }else{
+                return 'error2';
+            }
+        }else{
+            return 'error';
         }
     }
 }

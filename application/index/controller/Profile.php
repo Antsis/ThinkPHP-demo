@@ -13,27 +13,18 @@ class Profile extends Controller{
         parent::__construct();
         new Web();
     }
+    public function uploadSession($array)
+    {
+        $res=Web::get($array['id']);
+        return $res->toArray();
+    }
 
     public function profile($op='base')
     {
         if(empty(Session::get('logined'))){
             $this->redirect('index/userinfo');
         }
-        $array = Session::get('logined');
-        if(!empty($array['phone'])){
-            $phone = $array['phone'];
-        }else $phone=null;
-        if(!empty($array['email'])){
-            $email = $array['email'];
-        }else $email=null;
-        if(!empty($array['username'])){
-            $username = $array['username'];
-        }else $username=null;
-
-        $data = $this->queryInfo($phone, $email, $username);
-        if($data==null){
-            $this->error('服务器内部错误, 请联系管理员');
-        }
+        $data = $this->uploadSession(Session::get('logined'));
         if($data['birthday']==null){
             $data['birthday']=0;
         }
@@ -53,10 +44,9 @@ class Profile extends Controller{
         if(empty(Session::get('logined'))){
             $this->redirect('index/userinfo');
         }
-        $data=Session::get('logined');
-        $path = '/files/uploads/'. $data['username']. '/avatar_200.jpg';
+        $data=$this->uploadSession(Session::get('logined'));
         $this->assign('title', '修改头像');
-        $this->assign('avatar_url', $path);
+        $this->assign('data', $data);
         return view();
     }
     public function account()
@@ -64,38 +54,11 @@ class Profile extends Controller{
         if(empty(Session::get('logined'))){
             $this->redirect('index/userinfo');
         }
+        $data=$this->uploadSession(Session::get('logined'));
         $this->assign('title', '账号安全');
         return view();
     }
-    public function queryInfo($phone=null, $email=null, $username=null)
-    {
-        if($phone!=null){
-            $res = Web::where('phone', $phone)
-                    ->find();
-            if($res==null){
-                return 0;
-            }else{
-                return $res->toArray();
-            }
-        }else if($email!=null){
-            $res = Web::where('email', $email)
-                    ->find();
-            if($res==null){
-                return 0;
-            }else{
-
-                return $res->toArray();
-            }
-        }else if($username!=null){
-            $res = Web::where('username', $username)
-                    ->find();
-            if($res==null){
-                return 0;
-            }else {
-                return $res->toArray();
-            }
-        }else return;
-    }
+    
     public function profileSave()
     {
         if(!empty($_POST['name'])){
@@ -118,7 +81,7 @@ class Profile extends Controller{
                 'gender' => $gender,
                 'birthday' => $date,
                 'signature' => $signature
-            ], ['id' => 1]);
+            ], ['id' => $array['id']]);
             return "success";
         }catch(Exception $e){
             return "error";
@@ -146,13 +109,25 @@ class Profile extends Controller{
         $data = Session::get('logined');
         if($file){
             $info = $file->validate(['ext'=>'jpg,jpeg,png', 'type'=>'image/png,image/jpeg']);
-            // ->move(ROOT_PATH . 'public' . DS . 'files'. DS. 'uploads'. DS. $data['username']. DS , '');
             if($info){
                 $image = Image::open($file);
+                try{
                 $info2 = $image->thumb(200, 200, 2)->save(ROOT_PATH . 'public' . DS . 'files'. DS. 'uploads'. DS. $data['username']. DS. 'avatar_200.jpg');
                 $info3 = $image->thumb(38, 38, 2)->save(ROOT_PATH . 'public' . DS . 'files'. DS. 'uploads'. DS. $data['username']. DS. 'avatar_38.jpg');
+                }catch(Exception $e){
+                    return 'error5';
+                }
+                $path = 'files/uploads/'.$data['username'].'/';
                 if($info2&&$info3){
-                    return 'success';
+                    $user = new Web;
+                    try{
+                        $user->save([
+                            'avatar_url' => $path
+                        ], ['id' => $data['id']]);
+                        return "success";
+                    }catch(Exception $e){
+                        return "error4";
+                    }
                 }else return 'error3';
             }else{
                 return 'error2';

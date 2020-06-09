@@ -195,7 +195,7 @@ $(document).ready(function(){
                 }else if(data=="error"){
                     $("body").append(`
                         <div class="alert alert-danger alert-dismissible fade show fixed-top text-center" role="alert">
-                            <strong>上传失败!</strong>文件为空
+                            <strong>上传失败!</strong>文件太大
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>

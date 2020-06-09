@@ -10,28 +10,32 @@ class Index extends Controller
 
     public function index()
     {
+        $this->checkSession();
         return view();
     }
 
     public function checkLogined()
     {
         if(Session::get('logined')!=null){
-            return "logged";
-        }else return "notloged";
+            return "logined";
+        }else return "notlogin";
     }
     public function bbs()
     {
+        $this->checkSession();
         return $this->fetch();
     }
 
 
     public function about()
     {
+        $this->checkSession();
         return $this->fetch();
     }
 
     public function contact()
     {
+        $this->checkSession();
         return $this->fetch();
     }
 
@@ -46,5 +50,12 @@ class Index extends Controller
     {
         Session::clear();
         $this->success('正在跳转', 'index/index');
+    }
+    public function checkSession()
+    {
+        if(Session::get('logined')){
+            $data = Session::get('logined');
+            $this->assign('data', $data);
+        }else  $this->assign('data', ['avatar_url'=>null]);
     }
 }

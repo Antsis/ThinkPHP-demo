@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Cache-Control" content="No-cache">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">  
     <title>个人信息</title>
     {include file="common/css"}
 </head>
@@ -51,6 +52,7 @@
 
     {include file="common/js,common/footer"}
     <script src="__JS__/profile.js"></script>
+    
     <script>
         $(document).ready(function(){
             logined()

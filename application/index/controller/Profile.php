@@ -25,6 +25,7 @@ class Profile extends Controller{
             $this->redirect('index/userinfo');
         }
         $data = $this->uploadSession(Session::get('logined'));
+        
         if($data['birthday']==null){
             $data['birthday']=0;
         }
@@ -56,6 +57,7 @@ class Profile extends Controller{
         }
         $data=$this->uploadSession(Session::get('logined'));
         $this->assign('title', '账号安全');
+        $this->assign('data', $data);
         return view();
     }
     
@@ -105,12 +107,12 @@ class Profile extends Controller{
     }
     public function avatarUpload()
     {
-        $file = request()->file('image');
+        $file = request()->file('image');        
         $data = Session::get('logined');
         if($file){
-            $info = $file->validate(['ext'=>'jpg,jpeg,png', 'type'=>'image/png,image/jpeg']);
+            $info = $file->validate(['ext'=>'jpg,jpeg,png', 'type'=>'image/png,image/jpeg'])->move(ROOT_PATH . 'public' . DS . 'files'. DS. 'uploads'. DS. $data['username']. DS. 'avatarsHistory'. DS, time());
             if($info){
-                $image = Image::open($file);
+                $image = Image::open($info);
                 try{
                 $info2 = $image->thumb(200, 200, 2)->save(ROOT_PATH . 'public' . DS . 'files'. DS. 'uploads'. DS. $data['username']. DS. 'avatar_200.jpg');
                 $info3 = $image->thumb(38, 38, 2)->save(ROOT_PATH . 'public' . DS . 'files'. DS. 'uploads'. DS. $data['username']. DS. 'avatar_38.jpg');

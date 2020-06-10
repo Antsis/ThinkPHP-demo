@@ -17,4 +17,16 @@
             }
         })
     }
+    
+    $(document).ready(function(){
+        $.ajax({
+            type: "POST",
+            url: "{:url('@index/login/cookielogin')}",
+            success: data=>{
+                if(data=="success"){
+                    location.reload()
+                }
+            }
+        })
+    })
 </script>

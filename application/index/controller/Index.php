@@ -3,6 +3,7 @@ namespace app\index\controller;
 
 
 use think\Controller;
+use think\Cookie;
 use think\Session;
 
 class Index extends Controller
@@ -49,6 +50,7 @@ class Index extends Controller
     public function logout()
     {
         Session::clear();
+        Cookie::set('login_token', "");
         $this->success('正在跳转', 'index/index');
     }
     public function checkSession()

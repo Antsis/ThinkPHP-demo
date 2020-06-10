@@ -236,6 +236,7 @@ $(document).ready(function(){
     })
     
     // login
+    var loginstateFlag
     $("#login-phone").change(function(){
         if($(this).val()!=0){
             lphoneFlag = 1;
@@ -259,6 +260,9 @@ $(document).ready(function(){
     }
     })
     $("#login").click(function(){
+        if($("#login_state").is(":checked")){
+            loginstateFlag = 1
+        }else loginstateFlag = 0
         if(lphoneFlag){
             $("#login-phone").addClass("is-valid").removeClass("is-invalid");
         }else{
@@ -274,7 +278,8 @@ $(document).ready(function(){
             url: $(this).attr("data-purl"),
             data: {
                 "login_i" : $("#login-phone").val(),
-                "password" : $("#login-password").val()
+                "password" : $("#login-password").val(),
+                "login_state" : loginstateFlag
             },
             success: data=>{
                 if(data=="success"){

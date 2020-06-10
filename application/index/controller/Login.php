@@ -8,7 +8,7 @@ use think\Session;
 use app\index\model\Web;
 use Exception;
 use think\Controller;
-
+use think\Cookie;
 
 class Login extends Controller
 {
@@ -211,6 +211,7 @@ class Login extends Controller
 
     public function login()
     {
+        
         if(empty($_POST['login_i'])||empty($_POST['password'])){
             return "error";
         }
@@ -219,6 +220,7 @@ class Login extends Controller
         }
         $login = $_POST['login_i'];
         $passwd = $_POST['password'];
+
         try{
         $res = Web::where('phone', $login)
                 ->whereor('email', $login)
@@ -233,8 +235,72 @@ class Login extends Controller
         }
         if($array['phone']==$login&&$array['password']==md5($passwd)||$array['email']==$login&&$array['password']==md5($passwd)||$array['username']==$login&&$array['password']==md5($passwd)){
             Session::set('logined', $array);
-            // dump($array);
+            if($_POST['login_state']==1){
+                $code = $this->code();
+                Cookie::set('last_login_username', $login, ['expire'=>604800]);
+                Cookie::set("login_token", $code, ['expire'=>604800]);
+                Cookie::set("loginstate", 1, ['expire'=>604800]);
+                try{
+                    $user = Web::get($array['id']);
+                    $user->login_token = $code;
+                    $user->save();
+                }catch(Exception $e){
+                    return 'error3';
+                }
+            }
             return "success";
         }else return "error2";
+    }
+    public function cookieLogin()
+    {
+        if(Session::has('logined')){
+            return 'logined';
+        }
+        if(Cookie::has('last_login_username')&&Cookie::has('login_token')){
+            $login=Cookie::get('last_login_username');
+            $login_token=Cookie::get('login_token');
+            try{
+                $res = Web::where('phone', $login)
+                        ->whereor('email', $login)
+                        ->whereor('username', $login)
+                        ->find();
+            if(empty($res)){
+                return "error1";
+            }
+            $array = $res->toArray();
+            }catch(Exception $e){
+                return "error";
+            }
+            if($array['login_token']==$login_token){
+                if(Cookie::has('loginstate')){
+                    if(Cookie::get('loginstate')==1){
+                        $code = $this->code();
+                        Cookie::set('last_login_username', $login, ['expire'=>604800]);
+                        Cookie::set("login_token", $code, ['expire'=>604800]);
+                        Cookie::set("loginstate", 1, ['expire'=>604800]);
+                        try{
+                            $user = Web::get($array['id']);
+                            $user->login_token = $code;
+                            $user->save();
+                        }catch(Exception $e){
+                            return 'error';
+                        }
+                    }
+                }
+                Session::set('logined', $array);
+                return 'success';
+            }
+        }return 'error';
+    }
+    public function code()
+    {
+        $data = '1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM';
+        $code ='';
+        //生成64位随机码
+        for($i=0;$i<64;$i++){
+            $fontContext = substr($data, rand(0, strlen($data)-1), 1);
+            $code .= $fontContext;
+        }
+        return $code;
     }
 }

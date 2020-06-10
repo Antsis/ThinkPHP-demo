@@ -282,14 +282,7 @@ $(document).ready(function(){
                     $("#login-password").removeClass("is-invalid is-valid");
                     $("#login-phone").removeClass("is-valid is-invalid");
                     $("#login-reset").click();
-                    $("body").append(`
-                        <div class="alert alert-success alert-dismissible fade show fixed-top text-center" role="alert">
-                            <strong>登录成功!</strong>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="location.reload()">
-                            <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    `);
+                    $("#notice").modal('show')
                 }else if(data=="error1"){
                     $("#login-phone").addClass("is-invalid").siblings(".invalid-feedback").text("此用户不存在");
                 }else if(data=="error2"){

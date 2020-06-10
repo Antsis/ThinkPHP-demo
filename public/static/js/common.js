@@ -217,7 +217,8 @@ $(document).ready(function(){
                             </button>
                         </div>
                     `);
-                    logined();
+                    location.reload(true)
+                    logined()
                     $("#reg2-reset").click();
                     $("#reg-password").removeClass("is-invalid is-valid");
                 }
@@ -278,11 +279,19 @@ $(document).ready(function(){
             success: data=>{
                 if(data=="success"){
                     $("#modal").modal("hide");
-                    logined();
                     $("#login-password").removeClass("is-invalid is-valid");
                     $("#login-phone").removeClass("is-valid is-invalid");
                     $("#login-reset").click();
-                    $("#notice").modal('show')
+                    $("body").append(`
+                        <div class="alert alert-success alert-dismissible fade show fixed-top text-center" role="alert">
+                            <strong>登录成功!</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    `);
+                    location.reload(true)
+                    logined()
                 }else if(data=="error1"){
                     $("#login-phone").addClass("is-invalid").siblings(".invalid-feedback").text("此用户不存在");
                 }else if(data=="error2"){

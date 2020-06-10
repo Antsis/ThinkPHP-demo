@@ -228,27 +228,13 @@ class Login extends Controller
             return "error1";
         }
         $array = $res->toArray();
-        $emailS = $array['email'];
-        $phoneS = $array['phone'];
-        $passwdS = $array['password'];
-        $usernameS = $array['username'];
         }catch(Exception $e){
             return "error";
         }
-        if($phoneS==$login&&$passwdS==md5($passwd)||$emailS==$login&&$passwdS==md5($passwd)||$usernameS==$login&&$passwdS==md5($passwd)){
+        if($array['phone']==$login&&$array['password']==md5($passwd)||$array['email']==$login&&$array['password']==md5($passwd)||$array['username']==$login&&$array['password']==md5($passwd)){
             Session::set('logined', $array);
+            // dump($array);
             return "success";
         }else return "error2";
-    }
-
-    public function test()
-    {
-        $user = new Web;
-        $user->save([
-            'name' => $_POST['name'],
-            'gender' => $_POST['gender'],
-            // // 'birthday' => $date,
-            'signature' => $_POST['signature']
-        ], ['id' => 1]);
     }
 }

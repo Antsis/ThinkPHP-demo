@@ -20,8 +20,6 @@ $(document).ready(function(){
             signatureFlag = 0;
         }
     })
-
-
     $("#profile-save").click(function(){
         if(!signatureFlag){
             $("#signature").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("长度过长, 小于128位字符");

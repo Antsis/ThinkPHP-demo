@@ -1,5 +1,4 @@
 <?php
-
 namespace app\index\controller;
 
 use app\index\controller\SendSms;
@@ -17,7 +16,6 @@ class Login extends Controller
         parent::__construct();
         new Web();
     }
-
     public function verify()
     {     
         $captcha = new Captcha();
@@ -75,16 +73,22 @@ class Login extends Controller
             }else return 'error2';
         }else return "error2";
     }
-
+    /**
+     * 检查用户是否存在
+     * @param string 用户登录名
+     * @return true|false
+     */
     public function cehckUserIs($login)
     {
         $res = Web::where('phone', $login)
                 ->whereor('email', $login)
+                ->whereor('username', $login)
                 ->find();
         if($res){
             return 1;
         }else return 0;
     }
+
 
     public function sendCodeSmsEmail()
     {
@@ -93,7 +97,10 @@ class Login extends Controller
         }else $this->sendCodeSmsEmail();
     }
 
-    //这里调用了PHPMailer发送邮件
+    /**
+     * 这里调用了PHPMailer发送邮件
+     * @return true|false 返回是否成功
+     */
     public function sendCodeEmail()
     {
         //此类涉及个人账户
@@ -103,7 +110,10 @@ class Login extends Controller
             return 1;
         }else return 0;
     }
-    // 这里是调用阿里云的短信服务
+    /**
+     * 这里是调用阿里云的短信服务
+     * @return true|false 返回是否成功
+     */
     public function sendCodeSms()
     {
         //此类涉及个人账户
@@ -160,7 +170,12 @@ class Login extends Controller
         }
     }
     
-    
+    /**
+     * 在数据库中创建用户
+     * @param string $phone 电话号码
+     * @param string $passwd 账号密码
+     * @return integer|false
+     */
 
     public function regCreatePhone($phone, $passwd)
     {
@@ -185,6 +200,12 @@ class Login extends Controller
         
     }
 
+    /**
+     * 在数据库中创建用户
+     * @param string $email 邮箱
+     * @param string $passwd 账号密码
+     * @return integer|false
+     */
     public function regCreateEmail($email, $passwd)
     {
         $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -211,7 +232,6 @@ class Login extends Controller
 
     public function login()
     {
-        
         if(empty($_POST['login_i'])||empty($_POST['password'])){
             return "error";
         }
@@ -292,11 +312,14 @@ class Login extends Controller
             }
         }return 'error';
     }
+
+    /**
+     * @return string 随机码
+     */
     public function code()
     {
         $data = '1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM';
         $code ='';
-        //生成64位随机码
         for($i=0;$i<64;$i++){
             $fontContext = substr($data, rand(0, strlen($data)-1), 1);
             $code .= $fontContext;

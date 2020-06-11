@@ -295,8 +295,7 @@ $(document).ready(function(){
                             </button>
                         </div>
                     `);
-                    location.reload(true)
-                    logined()
+                    setTimeout(location.reload(true), 1000)
                 }else if(data=="error1"){
                     $("#login-phone").addClass("is-invalid").siblings(".invalid-feedback").text("此用户不存在");
                 }else if(data=="error2"){

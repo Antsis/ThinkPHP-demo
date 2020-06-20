@@ -5,6 +5,8 @@ use think\Controller;
 use think\Session;
 use think\Image;
 use app\index\model\Web;
+use app\index\model\Auth;
+use app\index\model\Role;
 use Exception;
 
 class Profile extends Controller{
@@ -12,7 +14,37 @@ class Profile extends Controller{
     {
         parent::__construct();
         new Web();
+        new Auth();
+        new Role();
     }
+
+    public function userInfo()
+    {
+        if(Session::get('logined')==null){
+            $this->error('请您登录');
+        }else{
+            $this->redirect('profile/profile');
+        }
+    }
+    public function checkRole()
+    {
+        $data = Session::get('logined');
+        $res = Role::get($data['role_id']);
+        $role = $res->toArray();
+        $ids = explode(',', $role['role_auth_ids']);
+        $menus = [];
+
+        foreach($ids as $a){
+            $res = Auth::get($a);
+            $menu['name'] = $res->toArray()['auth_name'];
+            $menu['auth_c'] = $res->toArray()['auth_c'];
+            $menu['auth_a'] = $res->toArray()['auth_a'];
+            $menus[] = $menu;
+        }
+        return $menus;
+
+    }
+
     public function uploadSession($array)
     {
         $res=Web::get($array['id']);
@@ -22,15 +54,15 @@ class Profile extends Controller{
     public function profile($op='base')
     {
         if(empty(Session::get('logined'))){
-            $this->redirect('index/userinfo');
+            $this->redirect('profile/userinfo');
         }
         $data = $this->uploadSession(Session::get('logined'));
-        
         if($data['birthday']==null){
             $data['birthday']=0;
         }
         $data['birthday']=date('Y-m-d', $data['birthday']);
         $this->assign('title', '个人资料');
+        $this->assign('menus', $this->checkRole());
         $this->assign('data', $data);
         if($op=='base'){
             return view();
@@ -40,23 +72,27 @@ class Profile extends Controller{
             $this->error('参数错误');
         }
     }
+
+
     public function avatar()
     {
         if(empty(Session::get('logined'))){
-            $this->redirect('index/userinfo');
+            $this->redirect('profile/userinfo');
         }
         $data=$this->uploadSession(Session::get('logined'));
         $this->assign('title', '修改头像');
+        $this->assign('menus', $this->checkRole());
         $this->assign('data', $data);
         return view();
     }
     public function account()
     {
         if(empty(Session::get('logined'))){
-            $this->redirect('index/userinfo');
+            $this->redirect('profile/userinfo');
         }
         $data=$this->uploadSession(Session::get('logined'));
         $this->assign('title', '账号安全');
+        $this->assign('menus', $this->checkRole());
         $this->assign('data', $data);
         return view();
     }

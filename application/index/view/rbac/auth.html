@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+{extend name="common/userinfo"}
+{block name="content"}
+
+<table class="table table-hover table-bordered table-list">
+    <thead>
+    <tr>
+        <th width="40">ID</th>
+        <th align="left">权限名</th>
+        <th width="200">控制器名</th>
+        <th width="200">方法名</th>
+        <th width="200">操作</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <foreach>
+        {volist name='auth' id='vo'}
+        <tr>
+            <td>{$vo.auth_id}</td>
+            <td>{$vo.auth_name}</td>
+            <td>{$vo.auth_c}</td>
+            <td>{$vo.auth_a}</td>
+            <td>
+                <a href="{:url('Rbac/authedit',array('auth_id'=>$vo['auth_id']))}">修改权限</a>
+                <a class="js-ajax-delete" href="{:url('Rbac/authdelete',array('auth_id'=>$vo['auth_id']))}">删除</a>
+            </td>
+        </tr>
+        {/volist}
+    </foreach>
+    </tbody>
+    
+</table>
+
+<div class="container text-center">
+    {$auth->render()}
+    <a class="btn btn-primary my-2 ju" role="button" href="{:url('Rbac/authadd',array('auth_id'=>$vo['auth_id']))}">添加权限</a>
+</div>
+
+{/block}

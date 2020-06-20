@@ -40,12 +40,6 @@ class Index extends Controller
         return $this->fetch();
     }
 
-    public function userInfo()
-    {
-        if(Session::get('logined')==null){
-            $this->error('请您登录');
-        }else $this->redirect('profile/profile');
-    }
 
     public function logout()
     {

@@ -2,7 +2,6 @@
 
 namespace app\index\controller;
 
-use AlibabaCloud\Client\Request\Traits\RetryTrait;
 use think\Controller;
 use think\Db;
 use think\Session;
